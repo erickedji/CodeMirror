@@ -42,12 +42,13 @@ var tokenizeJavaScript = (function() {
       "var": result("var", "keyword"), "function": result("function", "keyword"), "catch": result("catch", "keyword"),
       "for": result("for", "keyword"), "switch": result("switch", "keyword"),
       "case": result("case", "keyword"), "default": result("default", "keyword"),
-      "true": atom, "false": atom, "null": atom, "undefined": atom, "NaN": atom, "Infinity": atom
+      "true": atom, "false": atom, "null": atom, "undefined": atom, "NaN": atom, "Infinity": atom,
+      "ometa": keywordB
     };
   }();
 
   // Some helper regexps
-  var isOperatorChar = /[+\-*&%=<>!?|~]/;
+  var isOperatorChar = /[+\-*&%=<>!?|~:]/;
   var isHexDigit = /[0-9A-Fa-f]/;
   var isWordChar = /[\w\$_]/;
 
