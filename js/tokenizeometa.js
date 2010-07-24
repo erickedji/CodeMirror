@@ -48,7 +48,7 @@ var tokenizeJavaScript = (function() {
   }();
 
   // Some helper regexps
-  var isOperatorChar = /[+\-*&%=<>!?|~:]/;
+  var isOperatorChar = /[+\-*&%=<>!?|~]/;
   var isHexDigit = /[0-9A-Fa-f]/;
   var isWordChar = /[\w\$_]/;
 
@@ -139,6 +139,10 @@ var tokenizeJavaScript = (function() {
       source.nextWhileMatches(isWordChar);
       return {type: "string", style: "js-string"};
     }
+    function readOmetaBinding() {
+      source.nextWhileMatches(isWordChar);
+      return {type: "variable", style: "ometa-binding"};
+    }
 
     // Fetch the next token. Dispatches on first character in the
     // stream, or first two characters when the first is a slash.
@@ -151,6 +155,8 @@ var tokenizeJavaScript = (function() {
       return readString(ch);
     else if (ch == "`" || ch == "#" )
       return readOmetaIdentifierString();
+    else if (ch == ':' && isWordChar.test(source.peek())) 
+      return readOmetaBinding();
     // with punctuation, the type of the token is the symbol itself
     else if (/[\[\]{}\(\),;\:\.]/.test(ch))
       return {type: ch, style: "js-punctuation"};

@@ -57,3 +57,7 @@ span.js-comment {
 span.js-string {
   color: #AA2222;
 }
+
+span.ometa-binding {
+  color: #FF0000;
+}
