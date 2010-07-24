@@ -126,6 +126,24 @@ var tokenizeJavaScript = (function() {
       setInside(newInside);
       return {type: "comment", style: "js-comment"};
     }
+    function readMultilineString(start, quotes) {
+      var newInside = quotes;
+      var quote = quotes.charAt(0);
+      var maybeEnd = (start == quote);
+      while (true) {
+        if (source.endOfLine())
+          break;
+        var next = source.next();
+        if (next == quote && source.peek() == quote && maybeEnd) {
+          source.next();
+          newInside = null;
+          break;
+        }
+        maybeEnd = (next == quote);
+      }
+      setInside(newInside);
+      return {type: "multilineString", style: "js-string"};
+    }
     function readOperator() {
       source.nextWhileMatches(isOperatorChar);
       return {type: "operator", style: "js-operator"};
@@ -151,6 +169,10 @@ var tokenizeJavaScript = (function() {
     var ch = source.next();
     if (inside == "/*")
       return readMultilineComment(ch);
+    if (inside == '"""' || inside == "'''")
+      return readMultilineString(ch, inside);
+    if (ch == '"' && source.lookAhead('""', true) || ch == "'" && source.lookAhead("''", true))
+      return readMultilineString('-', ch+ch+ch); // work as far as '-' is not '"' nor "'"
     else if (ch == "\"" || ch == "'")
       return readString(ch);
     else if (ch == "`" || ch == "#" )

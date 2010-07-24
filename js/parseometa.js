@@ -103,7 +103,7 @@ var JSParser = Editor.Parser = (function() {
         token.indentation = indentJS(lexical);
       }
       // No more processing for meaningless tokens.
-      if (token.type == "whitespace" || token.type == "comment")
+      if (token.type == "whitespace" || token.type == "comment" || token.type == "multilineString")
         return token;
       // When a meaningful token is found and the lexical scope's
       // align is undefined, it is an aligned scope.
