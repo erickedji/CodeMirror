@@ -134,6 +134,10 @@ var tokenizeJavaScript = (function() {
       setInside(endBackSlash ? quote : null);
       return {type: "string", style: "js-string"};
     }
+    function readOmetaIdentifierString() {
+      source.nextWhileMatches(isWordChar);
+      return {type: "string", style: "js-string"};
+    }
 
     // Fetch the next token. Dispatches on first character in the
     // stream, or first two characters when the first is a slash.
@@ -144,6 +148,8 @@ var tokenizeJavaScript = (function() {
       return readMultilineComment(ch);
     else if (ch == "\"" || ch == "'")
       return readString(ch);
+    else if (ch == "`" || ch == "#" )
+      return readOmetaIdentifierString();
     // with punctuation, the type of the token is the symbol itself
     else if (/[\[\]{}\(\),;\:\.]/.test(ch))
       return {type: ch, style: "js-punctuation"};
